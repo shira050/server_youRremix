@@ -100,19 +100,25 @@ router.put("/myPlaylist", auth, async (req, res) => {
 });
 
 router.get("/search", async (req, res) => {
+  debugger
   let searchQ = req.query.s.toLowerCase();
-  let temp_song = SongModel.find({}).filter((item) => {
-    return (
+  const songs = await SongModel.find({}).exec();
+let temp_song = songs.filter((item) => {
+  return (
       item.name.toLowerCase().includes(searchQ) ||
       item.url_song.toLowerCase().includes(searchQ)
     );
   });
+  if(temp_song.length>0){
   SongModel.patch({_id:temp_song._id,countSearch:temp_song.countSearch+1})
   await UserModel.updateOne(
     { _id: req.tokenData._id },
     { $push: { lastSearch: temp_song[0]._id } }
   );
-
+  }
+  else{
+    console.log("not founded")
+  }
   res.json(temp_song);
   //TODO: אם לא קיים השיר נזמן יצירת שיר
 });
