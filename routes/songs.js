@@ -99,7 +99,7 @@ router.put("/myPlaylist", auth, async (req, res) => {
   }
 });
 
-router.get("/search", async (req, res) => {
+router.get("/search",auyh, async (req, res) => {
   debugger
   let searchQ = req.query.s.toLowerCase();
   const songs = await SongModel.find({}).exec();
