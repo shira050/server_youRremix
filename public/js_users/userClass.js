@@ -1,5 +1,3 @@
-const { config } = require("../../config/secret");
-
 export default class UserClass{
     constructor(_parent,_item,_index,_doApi) {
       this.parent = _parent;
@@ -42,7 +40,7 @@ export default class UserClass{
     }
   
     async delUser(){
-      let url = config.apiUrl+ "users/"+this.id;
+      let url = "http://localhost:3000/users/"+this.id;
       try{
         let resp =  await axios({
           url:url,

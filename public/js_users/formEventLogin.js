@@ -14,7 +14,7 @@ export const declareFormEventsLogin = (_doApi) => {
 };
 
 const loginUser = async (_obj, _doApi) => {
-  let url = config.apiUrl+"users/login";
+  let url = "http://localhost:3000/users/login";
     fetch(url,{
       method: "POST",
       body: JSON.stringify(_obj),

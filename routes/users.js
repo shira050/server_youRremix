@@ -7,6 +7,7 @@ const {
   validUser,
   loginValid,
   getToken,
+  validUserWithoutPass,
 } = require("../models/userModel");
 const { auth, authAdmin } = require("../auth/authToken");
 const bcrypt = require("bcrypt");
@@ -144,10 +145,13 @@ router.patch("/:idDel", authAdmin, async (req, res) => {
 router.put("/:idEdit", auth, async (req, res) => {
   debugger
   let validBody = validUserWithoutPass(req.body);
+
   if (validBody.error) {
     return res.status(400).json(validBody.error.details);
   }
   try {
+    console.log("gggggg");
+    debugger
     let idEdit = req.params.idEdit;
     let data = await UserModel.updateOne({ _id: idEdit }, req.body);
     res.json(data);
