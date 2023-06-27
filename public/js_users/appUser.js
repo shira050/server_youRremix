@@ -7,7 +7,7 @@ const init = () => {
 };
 
 const doApi = async () => {
-  let url = "http://localhost:3000/users?perPage=8&reverse=yes";
+  let url = API_URL+"/users?perPage=8&reverse=yes";
   try {
     let resp = await axios.get(url);
     console.log(resp);

@@ -28,7 +28,7 @@ export const declareFormEvents = (_doApi) => {
 };
 
 const loginUser = async (_obj, _doApi) => {
-  let url = "http://localhost:3000/users/login";
+  let url = config.apiUrl+"users/login";
   try {
     let resp = await axios({
       url,
@@ -53,7 +53,7 @@ const loginUser = async (_obj, _doApi) => {
 };
 
 const addUser = async (_obj, _doApi) => {
-  let url = "http://localhost:3000/users";
+  let url = config.apiUrl+"users";
   try {
     let resp = await axios({
       url,
@@ -78,7 +78,7 @@ const addUser = async (_obj, _doApi) => {
 };
 
 const updateUser = async (_obj, _doApi) => {
-  let url = "http://localhost:3000/users/" + localStorage.getItem("id_edit");
+  let url = config.apiUrl+"users/" + localStorage.getItem("id_edit");
   try {
     let resp = await axios({
       url,
