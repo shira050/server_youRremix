@@ -25,9 +25,9 @@ router.get("/", async (req, res) => {
 router.get("/mostSearch", async (req, res) => {
   try {
     let data = await SongModel.find({ active: true })
-  .sort({ countSearch: -1 }) // Sort in descending order based on countSearch
-  .limit(20); // Limit the results to 20 songs
-     res.json(data);
+      .sort({ countSearch: -1 }) // Sort in descending order based on countSearch
+      .limit(20); // Limit the results to 20 songs
+    res.json(data);
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "err", err });
@@ -99,24 +99,24 @@ router.put("/myPlaylist", auth, async (req, res) => {
   }
 });
 
-router.get("/search",auth, async (req, res) => {
+router.get("/search", auth, async (req, res) => {
   debugger
   let searchQ = req.query.s.toLowerCase();
   const songs = await SongModel.find({}).exec();
-let temp_song = songs.filter((item) => {
-  return (
-      item.name.toLowerCase().includes(searchQ) ||
-      item.url_song.toLowerCase().includes(searchQ)
+  let temp_song = songs.filter((item) => {
+    return (
+      item.title.toLowerCase().includes(searchQ) ||
+      item.src.toLowerCase().includes(searchQ)
     );
   });
-  if(temp_song.length>0){
-  SongModel.patch({_id:temp_song._id,countSearch:temp_song.countSearch+1})
-  await UserModel.updateOne(
-    { _id: req.tokenData._id },
-    { $push: { lastSearch: temp_song[0]._id } }
-  );
+  if (temp_song.length > 0) {
+    SongModel.updateOne({ _id: temp_song._id, countSearch: temp_song.countSearch + 1 })
+    await UserModel.updateOne(
+      { _id: req.tokenData._id },
+      { $push: { lastSearch: temp_song[0]._id } }
+    );
   }
-  else{
+  else {
     console.log("not founded")
   }
   res.json(temp_song);
