@@ -123,9 +123,9 @@ router.post("/login", async (req, res) => {
 });
 
 router.patch("/:idDel", authAdmin, async (req, res) => {
-  if (req.body.active == null || req.body.active == undefined) {
-    return res.status(400).json({ msg: "Need to send active in body" });
-  }
+  // if (req.body.active == null || req.body.active == undefined) {
+  //   return res.status(400).json({ msg: "Need to send active in body" });
+  // }
   try {
     console.log("000000000000000000000");
     let idDele = req.params.idDel;
