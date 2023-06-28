@@ -160,5 +160,22 @@ router.put("/:idEdit", auth, async (req, res) => {
     res.status(500).json({ msg: "err", err });
   }
 });
+router.patch("/:idUser/:role", authAdmin, async (req, res) => {
+  debugger
+  try {
+    let idUser = req.params.idUser;
+    let role = req.params.role;
+    console.log(idUser);
+    let usersUpdate = await UserModel.updateOne(
+      { _id: idUser },
+      { $set: { role: role } }
+    );
+    console.log(usersUpdate);
+    res.json(usersUpdate);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "err", err });
+  }
+});
 
 module.exports = router;
