@@ -132,7 +132,7 @@ router.patch("/:idDel", authAdmin, async (req, res) => {
     console.log(idDele);
     let userUpdate = await UserModel.updateOne(
       { _id: idDele },
-      { $set: { active: req.body.active } }
+      { $set: { active: false } }
     );
     console.log(userUpdate);
     res.json(userUpdate);
