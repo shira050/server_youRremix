@@ -22,6 +22,9 @@ router.get("/", async (req, res) => {
   }
 });
 router.get("/:idCategory", async (req, res) => {
+  debugger
+  let idCategory = req.params.idCategory;
+
   let perPage = Math.min(req.query.perPage, 20) || 5;
   let page = req.query.page || 1;
   let sort = req.query.sort || "_id";
