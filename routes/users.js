@@ -11,6 +11,7 @@ const {
 } = require("../models/userModel");
 const { auth, authAdmin } = require("../auth/authToken");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
 
 router.get("/", authAdmin, async (req, res) => {
   let perPage = Math.min(req.query.perPage, 20) || 5;
@@ -122,17 +123,59 @@ router.post("/login", async (req, res) => {
   }
 });
 
+
+// router.post("/login", async (req, res) => {
+//   debugger
+//   let validateBody = loginValid(req.body);
+//   if (validateBody.error) {
+//     return res.status(400).json(validateBody.error.details);
+//   }
+//   try {
+//     let user = await UserModel.findOne({ email: req.body.email });
+//     if (!user) {
+//       return res.status(401).json({ msg: "User and password not match" });
+//     }
+
+//     let validPassword = await bcrypt.compare(req.body.password, user.password);
+//     if (!validPassword) {
+//       return res.status(401).json({ msg: "User and password not match" });
+//     }
+
+//     let accessToken = jwt.sign({ userId: user._id, role: user.role }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+//     let refreshToken = jwt.sign({ userId: user._id, role: user.role }, process.env.REFRESH_TOKEN_SECRET);
+
+//     // Save the refresh token in the user document or any other secure storage
+//     user.refreshToken = refreshToken;
+//     await user.save();
+
+//     res.json({ your_token: accessToken, refresh_token: refreshToken });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ msg: "Internal server error" });
+//   }
+// });
+  
+//   function generateAccessToken(userId, userRole) {
+//     return jwt.sign({ userId, userRole }, process.env.ACCESS_TOKEN_SECRET, {
+//       expiresIn: '15m', // Set the expiration time for the access token
+//     });
+//   }
+  
+//   function generateRefreshToken(userId) {
+//     return jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET);
+//   }
+
 router.patch("/:idDel", authAdmin, async (req, res) => {
-  // if (req.body.active == null || req.body.active == undefined) {
-  //   return res.status(400).json({ msg: "Need to send active in body" });
-  // }
+  if (req.body.active == null || req.body.active == undefined) {
+    return res.status(400).json({ msg: "Need to send active in body" });
+  }
   try {
     console.log("000000000000000000000");
     let idDele = req.params.idDel;
     console.log(idDele);
     let userUpdate = await UserModel.updateOne(
       { _id: idDele },
-      { $set: { active: false } }
+      { $set: { active: req.body.active } }
     );
     console.log(userUpdate);
     res.json(userUpdate);
@@ -156,23 +199,6 @@ router.put("/:idEdit", auth, async (req, res) => {
     let data = await UserModel.updateOne({ _id: idEdit }, req.body);
     res.json(data);
   } catch {
-    console.log(err);
-    res.status(500).json({ msg: "err", err });
-  }
-});
-router.patch("/:idUser/:role", authAdmin, async (req, res) => {
-  debugger
-  try {
-    let idUser = req.params.idUser;
-    let role = req.params.role;
-    console.log(idUser);
-    let usersUpdate = await UserModel.updateOne(
-      { _id: idUser },
-      { $set: { role: role } }
-    );
-    console.log(usersUpdate);
-    res.json(usersUpdate);
-  } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "err", err });
   }
