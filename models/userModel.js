@@ -21,7 +21,9 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
-  lastSearch: [mongoose.ObjectId],
+  // lastSearch: [mongoose.ObjectId],
+  lastSearch: [{ type: mongoose.Schema.Types.ObjectId, ref: 'songs' }],
+
 });
 
 exports.UserModel = mongoose.model("users", userSchema);

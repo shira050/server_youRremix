@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
   }
 });
 router.get("/:idCategory", async (req, res) => {
-  debugger
+  debugger;
   let idCategory = req.params.idCategory;
 
   let perPage = Math.min(req.query.perPage, 20) || 5;
@@ -31,7 +31,7 @@ router.get("/:idCategory", async (req, res) => {
 
   let reverse = req.query.reverse == "yes" ? -1 : 1;
   try {
-    let data = await SongModel.find({ active: true,category_id:idCategory })
+    let data = await SongModel.find({ active: true, category_id: idCategory })
       .limit(perPage)
       .skip((page - 1) * perPage)
       .sort({ [sort]: reverse });
@@ -60,7 +60,7 @@ router.post("/", auth, async (req, res) => {
   if (validBody.error) {
     return res.status(400).json(validBody.error.details);
   }
-  debugger
+  debugger;
   try {
     let song = new SongModel(req.body);
     console.log(req.tokenData._id);
@@ -107,7 +107,6 @@ router.put("/:idEdit", authAdmin, async (req, res) => {
   }
 });
 
-
 router.put("/myPlaylist", auth, async (req, res) => {
   try {
     let myPlaylist = await UserModel.findOne({
@@ -121,7 +120,7 @@ router.put("/myPlaylist", auth, async (req, res) => {
 });
 
 router.get("/search", auth, async (req, res) => {
-  debugger
+  debugger;
   let searchQ = req.query.s.toLowerCase();
   const songs = await SongModel.find({}).exec();
   let temp_song = songs.filter((item) => {
@@ -131,14 +130,19 @@ router.get("/search", auth, async (req, res) => {
     );
   });
   if (temp_song.length > 0) {
-    SongModel.updateOne({ _id: temp_song._id, countSearch: temp_song.countSearch + 1 })
-    await UserModel.updateOne(
-      { _id: req.tokenData._id },
-      { $push: { lastSearch: temp_song[0]._id } }
-    );
-  }
-  else {
-    console.log("not founded")
+    SongModel.updateOne({
+      _id: temp_song._id,
+      countSearch: temp_song.countSearch + 1,
+    });
+    if (temp_song.length == 1) {
+      await UserModel.updateOne(
+        { _id: req.tokenData._id },
+        // { $push: { lastSearch: temp_song[0]._id } }
+        { $addToSet: { lastSearch: temp_song[0]._id } }
+      );
+    }
+  } else {
+    console.log("not founded");
   }
   res.json(temp_song);
   //TODO: אם לא קיים השיר נזמן יצירת שיר
