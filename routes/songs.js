@@ -102,7 +102,6 @@ router.put("/myPlaylist", auth, async (req, res) => {
 });
 
 router.get("/search", auth, async (req, res) => {
-  debugger
   try {
     let searchQ = req.query.s.toLowerCase();
     const songs = await SongModel.find({}).exec();
@@ -126,11 +125,11 @@ debugger
       if (temp_song.length === 1) {
         await UserModel.updateOne(
           { _id: req.tokenData._id },
-          { $addToSet: { lastSearch: temp_song[0]._id } }
+          { $addToSet: { lastSearch: temp_song[0]._doc._id } }
         );
       }
-    } else {
-      return res.status(404).json([]);
+    } else if(temp_song.length==0){
+      return res.status(200).json([]);
         //TODO: אם לא קיים השיר נזמן יצירת שיר
 
     }
