@@ -21,29 +21,10 @@ router.get("/", async (req, res) => {
     res.status(500).json({ msg: "err", err });
   }
 });
-router.get("/:idCategory", async (req, res) => {
-  debugger;
-  let idCategory = req.params.idCategory;
 
-  let perPage = Math.min(req.query.perPage, 20) || 5;
-  let page = req.query.page || 1;
-  let sort = req.query.sort || "_id";
-
-  let reverse = req.query.reverse == "yes" ? -1 : 1;
-  try {
-    let data = await SongModel.find({ active: true, category_id: idCategory })
-      .limit(perPage)
-      .skip((page - 1) * perPage)
-      .sort({ [sort]: reverse });
-    res.json(data);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ msg: "err", err });
-  }
-});
 
 router.get("/mostSearch", async (req, res) => {
-  try {
+  try {debugger
     let data = await SongModel.find({ active: true })
       .sort({ countSearch: -1 }) // Sort in descending order based on countSearch
       .limit(20); // Limit the results to 20 songs
@@ -53,6 +34,7 @@ router.get("/mostSearch", async (req, res) => {
     res.status(500).json({ msg: "err", err });
   }
 });
+
 
 router.post("/", auth, async (req, res) => {
   let validBody = validSong(req.body);
@@ -120,32 +102,64 @@ router.put("/myPlaylist", auth, async (req, res) => {
 });
 
 router.get("/search", auth, async (req, res) => {
-  debugger;
-  let searchQ = req.query.s.toLowerCase();
-  const songs = await SongModel.find({}).exec();
-  let temp_song = songs.filter((item) => {
-    return (
-      item.title.toLowerCase().includes(searchQ) ||
-      item.src.toLowerCase().includes(searchQ)
-    );
-  });
-  if (temp_song.length > 0) {
-    SongModel.updateOne({
-      _id: temp_song._id,
-      countSearch: temp_song.countSearch + 1,
-    });
-    if (temp_song.length == 1) {
-      await UserModel.updateOne(
-        { _id: req.tokenData._id },
-        // { $push: { lastSearch: temp_song[0]._id } }
-        { $addToSet: { lastSearch: temp_song[0]._id } }
+  debugger
+  try {
+    let searchQ = req.query.s.toLowerCase();
+    const songs = await SongModel.find({}).exec();
+    let temp_song = songs.filter((item) => {
+      return (
+        item.title.toLowerCase().includes(searchQ) ||
+        item.src.toLowerCase().includes(searchQ)
       );
+    });
+debugger
+    if (temp_song.length > 0) {
+      await Promise.all(
+        temp_song.map((song) =>
+          SongModel.updateOne(
+            { _id: song._id },
+            { $inc: { countSearch: 1 } }
+          )
+        )
+      );
+
+      if (temp_song.length === 1) {
+        await UserModel.updateOne(
+          { _id: req.tokenData._id },
+          { $addToSet: { lastSearch: temp_song[0]._id } }
+        );
+      }
+    } else {
+      return res.status(404).json({ error: "Song not found" });
+        //TODO: אם לא קיים השיר נזמן יצירת שיר
+
     }
-  } else {
-    console.log("not founded");
+
+    res.json(temp_song);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-  res.json(temp_song);
-  //TODO: אם לא קיים השיר נזמן יצירת שיר
+});
+router.get("/:idCategory", async (req, res) => {
+  debugger;
+  let idCategory = req.params.idCategory;
+
+  let perPage = Math.min(req.query.perPage, 20) || 5;
+  let page = req.query.page || 1;
+  let sort = req.query.sort || "_id";
+
+  let reverse = req.query.reverse == "yes" ? -1 : 1;
+  try {
+    let data = await SongModel.find({ active: true, category_id: idCategory })
+      .limit(perPage)
+      .skip((page - 1) * perPage)
+      .sort({ [sort]: reverse });
+    res.json(data);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "err", err });
+  }
 });
 
 module.exports = router;
