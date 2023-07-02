@@ -130,7 +130,7 @@ debugger
         );
       }
     } else {
-      return res.status(404).json({ error: "Song not found" });
+      return res.status(404).json([]);
         //TODO: אם לא קיים השיר נזמן יצירת שיר
 
     }
