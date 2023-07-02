@@ -7,7 +7,7 @@ const songSchema = new mongoose.Schema({
   src: String,//השיר הסופי קובץ mp3
   category_id: String,
   image:String,
-  rate: { type: Number, default: 5 },
+  rate: { type: Number, default: 0 },
   countSearch: { type: Number, default: 0 },
   active: {
     type: Boolean,
