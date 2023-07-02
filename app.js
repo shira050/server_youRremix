@@ -4,10 +4,14 @@ const http = require("http");
 const cors = require("cors");
 const { routesInit} = require("./routes/config_routes");
 require("./db/mongoConnect");
+const fileUpload = require("express-fileupload");
+
 
 const app = express();
 
 app.use(cors());
+app.use(fileUpload({limits:{fileSize: 1024 * 1024 * 5 }}))
+
 
 app.use(express.json());
 
