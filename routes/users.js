@@ -97,34 +97,34 @@ router.post("/", async (req, res) => {
   }
 });
 
-// router.post("/login", async (req, res) => {
-//   let valdiateBody = loginValid(req.body);
-//   if (valdiateBody.error) {
-//     return res.status(400).json(valdiateBody.error.details);
-//   }
-//   try {
-//     let user = await UserModel.findOne({ email: req.body.email });
-//     if (!user) {
-//       return res.status(401).json({ msg: "User and password not match 1" });
-//     }
-
-//     let validPassword = await bcrypt.compare(req.body.password, user.password);
-//     if (!validPassword) {
-//       return res.status(401).json({ msg: "User and password not match 2" });
-//     }
-
-//     let newToken = getToken(user._id, user.role);
-//     localStorage.setItem("token", newToken);
-//     console.log(newToken);
-//     res.json({ your_token: newToken });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).json({ msg: "err", err });
-//   }
-// });
-
-
 router.post("/login", async (req, res) => {
+  let valdiateBody = loginValid(req.body);
+  if (valdiateBody.error) {
+    return res.status(400).json(valdiateBody.error.details);
+  }
+  try {
+    let user = await UserModel.findOne({ email: req.body.email });
+    if (!user) {
+      return res.status(401).json({ msg: "User and password not match 1" });
+    }
+
+    let validPassword = await bcrypt.compare(req.body.password, user.password);
+    if (!validPassword) {
+      return res.status(401).json({ msg: "User and password not match 2" });
+    }
+
+    let newToken = getToken(user._id, user.role);
+    localStorage.setItem("token", newToken);
+    console.log(newToken);
+    res.json({ your_token: newToken });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "err", err });
+  }
+});
+
+
+router.post("/loginRefreshToken", async (req, res) => {
   debugger
   let validateBody = loginValid(req.body);
   if (validateBody.error) {
