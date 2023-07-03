@@ -4,7 +4,7 @@ const { CategoryModel, validCategory } = require("../models/categoryModel");
 const { auth, authAdmin } = require("../auth/authToken");
 
 router.get("/", async (req, res) => {
-  let perPage = Math.min(req.query.perPage, 20) || 5;
+  let perPage = Math.min(req.query.perPage, 20) || 10;
   let page = req.query.page || 1;
   let sort = req.query.sort || "_id";
 
