@@ -11,9 +11,9 @@ router.get("/", async (req, res) => {
   let reverse = req.query.reverse == "yes" ? -1 : 1;
   try {
     let data = await CategoryModel.find({active:true})
-      .limit(perPage)
-      .skip((page - 1) * perPage)
-      .sort({ [sort]: reverse });
+      // .limit(perPage)
+      // .skip((page - 1) * perPage)
+      // .sort({ [sort]: reverse });
     res.json(data);
   } catch (err) {
     console.log(err);

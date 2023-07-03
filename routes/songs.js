@@ -26,8 +26,8 @@ router.get("/", async (req, res) => {
 router.get("/mostSearch", async (req, res) => {
   try {debugger
     let data = await SongModel.find({ active: true })
-      .sort({ countSearch: -1 }) // Sort in descending order based on countSearch
-      .limit(20); // Limit the results to 20 songs
+      // .sort({ countSearch: -1 }) // Sort in descending order based on countSearch
+      // .limit(20); // Limit the results to 20 songs
     res.json(data);
   } catch (err) {
     console.log(err);
@@ -47,6 +47,7 @@ router.post("/", auth, async (req, res) => {
     let song = new SongModel(req.body);
     console.log(req.tokenData._id);
     song.user_id = req.tokenData._id;
+    song.src=req.files["myFile"];
     await song.save();
     res.status(201).json(song);
   } catch (err) {
