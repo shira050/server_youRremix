@@ -43,7 +43,7 @@ exports.validUserWithoutPass = (_bodyData) => {
     firstName: Joi.string().min(2).max(99).required(),
     lastName: Joi.string().min(2).max(99).required(),
     email: Joi.string().min(2).max(99).email().required(),
-    avatar: Joi.string().min(6).max(500).required(),
+    avatar: Joi.string().min(6).max(500),
   });
   return joiSchema.validate(_bodyData);
 };
