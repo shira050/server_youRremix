@@ -1,6 +1,3 @@
-Creating a README file for your Spotify project can be structured to provide a comprehensive overview of your project, instructions for setting up the environment, and usage guidelines. Below is an example of how you can structure your README file:
-
----
 
 # Spotify Remix Manager
 
@@ -108,6 +105,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [TensorFlow](https://www.tensorflow.org/)
 - [PyTorch](https://pytorch.org/)
 
----
 
-This README covers the essential aspects of your project, including an overview, features, technology stack, setup instructions, usage guidelines, contribution instructions, license, and acknowledgements. You can customize and expand upon this template based on the specific details and requirements of your project.
